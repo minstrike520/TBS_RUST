@@ -1,6 +1,11 @@
 pub mod game {
     pub mod skills {
         pub struct SkillManager(Vec<String>);
+        impl Default for SkillManager {
+            fn default() -> Self {
+                SkillManager(Vec::default())
+            }
+        }
 
         pub mod types {
             use crate::game;
@@ -58,7 +63,11 @@ pub mod game {
         }
 
         pub struct LocationManager(Point);
-        
+        impl Default for LocationManager {
+            fn default() -> Self {
+                LocationManager(Point::new(0,0))
+            }
+        }
     }
     
     pub mod effects {
@@ -72,6 +81,11 @@ pub mod game {
             pub effect_type: Effect,
         }
         pub struct EffectManager(Vec<EffectStatus>);
+        impl Default for EffectManager {
+            fn default() -> Self {
+                EffectManager(Vec::default())
+            }
+        }
 
     }
 
@@ -79,8 +93,15 @@ pub mod game {
         //use crate::game::skills;
         use crate::game;
         use game::flow::ActionValue;
+
+        use super::{effects::EffectManager, positioning::LocationManager, skills::SkillManager};
         pub struct Sprite {
             location: game::positioning::LocationManager,
+        }
+        impl Default for Sprite {
+            fn default() -> Self {
+                Sprite { location: LocationManager::default() }
+            }
         }
         pub struct CharacterInborn {
             pub atk: i32,
@@ -99,7 +120,17 @@ pub mod game {
                 //TODO
             }
         }
+        impl Default for Health {
+            fn default() -> Self {
+                Health(1000)
+            }
+        }
         pub struct Mana(i32);
+        impl Default for Mana {
+            fn default() -> Self {
+                Mana(100)
+            }
+        }
 
         pub struct Character<'a> {
             pub id: String,
@@ -111,6 +142,18 @@ pub mod game {
             pub mp: Mana,
             pub action_value: ActionValue<'a>,
         }
+        impl<'a> Default for Character<'a> {
+            fn default() -> Self {
+                Character { 
+                    id: String::default(), 
+                    effects: EffectManager::default(), 
+                    sprite: Sprite::default(), 
+                    inborn: CharacterInborn::default(), 
+                    skills: SkillManager::default(), 
+                    hp: Health::default(), 
+                    mp: Mana::default(), 
+                    action_value: ActionValue::default() }
+            }
         }
     }
 
